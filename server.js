@@ -95,6 +95,10 @@ app.use('/', menuItemRoutes);
 
 console.log("About to start server...");
 
+// comment added for testing purpose 
+
 app.listen(3000, () => {
     console.log('Server is running on http://localhost:3000');
 });
+
+
