@@ -1,18 +1,38 @@
 const MenuItem = require('./models/MenuItem');
-
 const express = require('express');
 const app = express();
-
 require('./db'); // just require, no variable
 const PORT = process.env.PORT || 3000;
-
 app.use(express.json());
+const passport = require('./auth');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 
 //console.log("Before requiring model");
 //const Person = require('./models/Person');
 //console.log("Model loaded");
 
-app.get('/', (req, res) => {
+
+// MiddleWare function
+const logRequest = (req, res, next) => {
+    console.log(`${new Date().toLocaleString()} request made to : ${req.originalUrl}`);
+    next();
+}
+
+
+app.use(logrequest);
+
+
+
+
+app.use(passport.initialize());
+
+
+const localAuthMiddleware = passport.authenticate('local', { session: false });
+
+
+
+app.get('/', function (req, res) => {
     res.send('Welcome to my Hotel... how may i help you!');
 });
 
@@ -92,7 +112,7 @@ const personRoutes = require('./routes/personRoutes');
 const menuItemRoutes = require('./routes/menuItemRoutes');
 //use the router
 app.use('/', personRoutes);
-app.use('/', menuItemRoutes);
+app.use('/', localAuthMidleware, menuItemRoutes);
 
 console.log("About to start server...");
 
